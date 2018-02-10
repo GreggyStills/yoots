@@ -14,6 +14,11 @@ class TestPrompt(unittest.TestCase):
         result = prompt.confirm_yn()
         self.assertFalse(result)
 
+    def test_confirmcountdown(self):
+        prompt.time.sleep = lambda x: None
+        result = prompt.confirm_countdown()
+        self.assertTrue(result)
+
     def test_confirm_rnd(self):
         prompt.raw_input = lambda x: "1"
         result = prompt.confirm_rnd(1, 2)
