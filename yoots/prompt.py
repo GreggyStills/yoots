@@ -2,7 +2,6 @@
 from collections import OrderedDict
 from getpass import getpass
 import random
-import sys
 import time
 
 from yoots import eprint
@@ -42,8 +41,7 @@ def confirm_countdown(msg="Will continue in [{}] seconds; press Ctrl-C to abort.
     time_at_timeout = time.time() + timeout
     while time.time() < time_at_timeout:
         try:
-            sys.stderr.write('\r' + msg.format(timeout))
-            sys.stderr.flush()
+            eprint(msg.format(timeout), newline='\r')
             timeout -= 1
             time.sleep(1)
         except KeyboardInterrupt:
@@ -192,6 +190,5 @@ def pick_many(item_list=None, msg="Multiple options exist, choose all that apply
                 else:
                     chosen.append(item)
         if not chosen:
-            eprint("\n\tERROR: There is no option [ {} ] on this list! "
-                  "You typed: '{}'\n".format(selection, user_choice))
+            eprint("\n\tERROR: There is no [ {} ] on this list! You typed: '{}'".format(selection, user_choice))
     return chosen
