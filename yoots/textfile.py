@@ -1,17 +1,13 @@
 """Read+write text files of various formats."""
 import ast
-import ConfigParser
+import configparser
 import csv
 import json
 import os
-import sys
 
 import yaml
 
-
-def eprint(msg):
-    """Print a message to stderr with a trailing newline."""
-    sys.stderr.write("{}\n".format(msg))
+from yoots import eprint
 
 
 class TextFile(object):
@@ -75,14 +71,14 @@ class TextFile(object):
         Returns:
             fdata (dict): data content of file (nested dictionary)
         """
-        ini = ConfigParser.ConfigParser()
+        ini = configparser.ConfigParser()
         ini.read(fname)
         cfg_sections = ini.sections()
         fdata = {}
         for section in cfg_sections:
             fdata[section] = dict(ini.items(section))
-            # ConfigParser reads values as strings, so try to interpret
-            for key, value in fdata[section].iteritems():
+            # configparser reads values as strings, so try to interpret
+            for key, value in fdata[section].items():
                 try:
                     fdata[section][key] = ast.literal_eval(value)
                 except (SyntaxError, ValueError):
@@ -191,7 +187,7 @@ class TextFile(object):
         assert isinstance(fdata, list), "Input data must be a list."
         assert isinstance(fdata[0], dict), "Each list element must be a dictionary."
         keys = fdata[0].keys()
-        with open(fname, 'wb') as outfile:
+        with open(fname, 'w') as outfile:
             writer = csv.DictWriter(outfile, fieldnames=keys, lineterminator='\n')
             writer.writeheader()
             writer.writerows(fdata)
@@ -199,7 +195,7 @@ class TextFile(object):
 
     @staticmethod
     def write_ini(fname, fdata):
-        """Write data to INI file, using Python built-in ConfigParser module.
+        """Write data to INI file, using Python built-in configparser module.
 
         Args:
             fname (str): filename (may include a directory path)
@@ -209,12 +205,12 @@ class TextFile(object):
             fname (str): filename (may include a directory path)
         """
         assert isinstance(fdata, dict), "Input data must be a dictionary."
-        ini = ConfigParser.ConfigParser()
-        for section, section_dict in fdata.iteritems():
+        ini = configparser.ConfigParser()
+        for section, section_dict in fdata.items():
             ini.add_section(section)
-            for key, value in section_dict.iteritems():
-                ini.set(section, key, value=value)
-        with open(fname, 'wb') as outfile:
+            for key, value in section_dict.items():
+                ini.set(section, key, value=str(value))
+        with open(fname, 'w') as outfile:
             ini.write(outfile)
         return fname
 
@@ -228,7 +224,7 @@ class TextFile(object):
         Returns:
             fname (str): filename (may include a directory path)
         """
-        with open(fname, 'wb') as outfile:
+        with open(fname, 'w') as outfile:
             json.dump(fdata, outfile, indent=2)
         return fname
 
@@ -242,7 +238,7 @@ class TextFile(object):
         Returns:
             fname (str): filename (may include a directory path)
         """
-        with open(fname, 'wb') as outfile:
+        with open(fname, 'w') as outfile:
             outfile.write(str(fdata))
         return fname
 
@@ -256,7 +252,7 @@ class TextFile(object):
         Returns:
             fname (str): filename (may include a directory path)
         """
-        with open(fname, 'wb') as outfile:
+        with open(fname, 'w') as outfile:
             outfile.write(yaml.dump(fdata, default_flow_style=False))
         return fname
 
