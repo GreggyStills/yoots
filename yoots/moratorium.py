@@ -71,7 +71,7 @@ holidays = {
     "Independence Day": make_day_julian("{}-07-04".format(this_year)),
     "Labor Day": get_nth_day("Monday", 1, this_year, 9),
     "Thanksgiving": get_nth_day("Thursday", 4, this_year, 11),
-    "Thanksgiving Friday": get_nth_day("Thursday", 4, this_year, 11),
+    "Thanksgiving Friday": get_nth_day("Thursday", 4, this_year, 11)+1,
     "Christmas": make_day_julian("{}-12-25".format(this_year))
 }
 

@@ -22,10 +22,13 @@ class TestMoratorium(unittest.TestCase):
         self.assertTrue(jday == 326)
 
     def test_is_holiday(self):
-        dt = time.strptime("2018-01-01", "%Y-%m-%d")
-        self.assertTrue(moratorium.is_holiday(dt))
-        dt = time.strptime("2018-08-15", "%Y-%m-%d")
-        self.assertFalse(moratorium.is_holiday(dt))
+        total_holidays = len(moratorium.holidays)
+        found = 0
+        for j in range(1, 366):
+            dt = time.strptime("{} {}".format(2018, j), "%Y %j")
+            if moratorium.is_holiday(dt):
+                found += 1
+        self.assertTrue(found == total_holidays)
 
     def test_is_eom(self):
         mdays = []
